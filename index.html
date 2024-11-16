@@ -1,46 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gambling Site</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div id="auth-container" class="hidden">
-        <h2>Login or Register</h2>
-        <form id="auth-form">
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" id="auth-button">Login</button>
-        </form>
-        <p id="toggle-auth">Don't have an account? <a href="#">Register here</a>.</p>
+<!-- Slots Section -->
+<div id="slots-container" class="game-container hidden">
+    <h2>Slots Machine</h2>
+    <p id="slots-display">🎰🎰🎰</p>
+    <button id="spin-button">Spin</button>
+    <p id="slots-message"></p>
+    <button id="back-button">Back</button>
+</div>
+
+<!-- Roulette Section -->
+<div id="roulette-container" class="game-container hidden">
+    <h2>Roulette</h2>
+    <div id="roulette-wheel">🔴⚫🔴⚫🔴</div>
+    <button id="roulette-spin-button">Spin</button>
+    <p id="roulette-message"></p>
+    <button id="roulette-back-button">Back</button>
+</div>
+
+<!-- Blackjack Section -->
+<div id="blackjack-container" class="game-container hidden">
+    <h2>Blackjack</h2>
+    <div id="blackjack-table">
+        <p id="player-hand"></p>
+        <p id="dealer-hand"></p>
+        <button id="hit-button">Hit</button>
+        <button id="stand-button">Stand</button>
     </div>
-
-    <div id="main-container" class="hidden">
-        <header>
-            <h1>Welcome, <span id="user-display"></span>!</h1>
-            <p>Balance: $<span id="user-balance">1000</span></p>
-            <button id="logout-button">Logout</button>
-        </header>
-        <section>
-            <h2>Games</h2>
-            <button id="play-slots">Play Slots</button>
-            <button id="play-roulette">Play Roulette</button>
-            <button id="play-blackjack">Play Blackjack</button>
-        </section>
-
-        <!-- Slots Machine -->
-        <div id="slots-container" class="hidden">
-            <h2>Slots Machine</h2>
-            <p>Spin the slots to win! Each spin costs $10.</p>
-            <div id="slots-display">🎰 🎰 🎰</div>
-            <button id="spin-button">Spin</button>
-            <p id="slots-message"></p>
-            <button id="back-button">Back to Games</button>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
-</body>
-</html>
+    <p id="blackjack-message"></p>
+    <button id="blackjack-back-button">Back</button>
+</div>
