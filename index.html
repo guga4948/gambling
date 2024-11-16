@@ -8,39 +8,35 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to the Gambling Site</h1>
-        <div id="user-info">
-            <p id="welcome-message"></p>
-            <button id="logout-btn" class="hidden">Logout</button>
-        </div>
+        <h1>Welcome to the Gambling Site!</h1>
     </header>
 
     <main>
-        <section id="login-register">
-            <h2>Login or Register</h2>
-            <form id="auth-form">
-                <input type="text" id="username" placeholder="Enter username" required>
-                <button type="submit">Login/Register</button>
-            </form>
-            <p id="auth-error" class="hidden">User not found.</p>
-        </section>
+        <div class="user-info">
+            <p id="username">Player: Guest</p>
+            <p id="balance">Balance: $1000</p>
+            <button id="daily-reward">Claim Daily Reward</button>
+        </div>
 
-        <section id="games" class="hidden">
+        <section class="games">
             <h2>Games</h2>
-            <div id="currency-container">
-                <p>Your Balance: <span id="balance">$0</span></p>
-                <button id="daily-reward-btn">Claim Daily Reward</button>
-            </div>
-            <div class="game" id="slots-game">
+            <div class="game">
                 <h3>Slots</h3>
-                <button id="play-slots-btn">Play Slots ($100)</button>
-                <p id="slots-result"></p>
+                <button id="play-slots">Play Slots</button>
+            </div>
+            <div class="game">
+                <h3>Blackjack</h3>
+                <button id="play-blackjack">Play Blackjack</button>
+            </div>
+            <div class="game">
+                <h3>Roulette</h3>
+                <button id="play-roulette">Play Roulette</button>
             </div>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Gambling Site. All rights reserved.</p>
+        <p>&copy; 2024 Gambling Site. All Rights Reserved.</p>
     </footer>
 
     <script src="script.js"></script>
