@@ -1,112 +1,68 @@
-// Initialize variables
-const authContainer = document.getElementById('auth-container');
-const mainContainer = document.getElementById('main-container');
-const authForm = document.getElementById('auth-form');
-const usernameInput = document.getElementById('username');
-const passwordInput = document.getElementById('password');
-const authButton = document.getElementById('auth-button');
-const toggleAuth = document.getElementById('toggle-auth');
-const userDisplay = document.getElementById('user-display');
-const userBalance = document.getElementById('user-balance');
-const logoutButton = document.getElementById('logout-button');
+// Add Slots Machine Logic to Existing Code
 
-// Helper: Get user data from localStorage
-function getUserData() {
-    return JSON.parse(localStorage.getItem('users')) || {};
+// DOM Elements for Slots
+const slotsContainer = document.getElementById('slots-container');
+const slotsDisplay = document.getElementById('slots-display');
+const spinButton = document.getElementById('spin-button');
+const slotsMessage = document.getElementById('slots-message');
+const backButton = document.getElementById('back-button');
+
+// Randomize Slots Numbers
+function spinSlots() {
+    return Array.from({ length: 3 }, () => Math.floor(Math.random() * 10)); // Random numbers 0-9
 }
 
-// Helper: Save user data to localStorage
-function saveUserData(data) {
-    localStorage.setItem('users', JSON.stringify(data));
+// Calculate Slots Result
+function calculatePayout(result) {
+    if (result[0] === result[1] && result[1] === result[2]) {
+        return 100; // All three match
+    } else if (result[0] === result[1] || result[1] === result[2] || result[0] === result[2]) {
+        return 20; // Two match
+    }
+    return 0; // No match
 }
 
-// Helper: Set the current user
-function setCurrentUser(username) {
-    localStorage.setItem('currentUser', username);
-}
-
-// Helper: Get the current user
-function getCurrentUser() {
-    return localStorage.getItem('currentUser');
-}
-
-// Show main content
-function showMain(username) {
-    authContainer.classList.add('hidden');
-    mainContainer.classList.remove('hidden');
-    userDisplay.textContent = username;
-
-    // Fetch the user's balance
+// Slots Button Logic
+spinButton.addEventListener('click', () => {
     const users = getUserData();
-    userBalance.textContent = users[username].balance;
-}
+    const currentUser = getCurrentUser();
 
-// Logout functionality
-logoutButton.addEventListener('click', () => {
-    localStorage.removeItem('currentUser');
-    mainContainer.classList.add('hidden');
-    authContainer.classList.remove('hidden');
-});
-
-// Login/Register Toggle
-let isLogin = true;
-toggleAuth.addEventListener('click', (e) => {
-    e.preventDefault();
-    isLogin = !isLogin;
-    authButton.textContent = isLogin ? 'Login' : 'Register';
-    toggleAuth.innerHTML = isLogin
-        ? "Don't have an account? <a href='#'>Register here</a>."
-        : "Already have an account? <a href='#'>Login here</a>.";
-});
-
-// Handle form submission (Login/Register)
-authForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-
-    if (!username || !password) {
-        alert('Please enter a valid username and password.');
+    // Deduct $10 for spin
+    if (users[currentUser].balance < 10) {
+        slotsMessage.textContent = "Insufficient balance! Please add more funds.";
+        slotsMessage.style.color = "#e74c3c"; // Red for error
         return;
     }
 
-    const users = getUserData();
+    users[currentUser].balance -= 10;
+    saveUserData(users);
+    userBalance.textContent = users[currentUser].balance;
 
-    if (isLogin) {
-        // Login logic
-        if (!users[username] || users[username].password !== password) {
-            alert('Invalid username or password.');
-            return;
-        }
-
-        // Login successful
-        setCurrentUser(username);
-        showMain(username);
-    } else {
-        // Registration logic
-        if (users[username]) {
-            alert('Username already exists.');
-            return;
-        }
-
-        // Register the user
-        users[username] = { password, balance: 1000 }; // Default balance: $1000
+    // Generate Slots Result
+    const result = spinSlots();
+    slotsDisplay.textContent = result.map(num => `🎰${num}`).join(" ");
+    
+    // Check Payout
+    const payout = calculatePayout(result);
+    if (payout > 0) {
+        slotsMessage.textContent = `Congratulations! You won $${payout}!`;
+        slotsMessage.style.color = "#27ae60"; // Green for success
+        users[currentUser].balance += payout;
         saveUserData(users);
-        setCurrentUser(username);
-        showMain(username);
+        userBalance.textContent = users[currentUser].balance;
+    } else {
+        slotsMessage.textContent = "No luck this time! Try again.";
+        slotsMessage.style.color = "#e74c3c"; // Red for loss
     }
-
-    // Clear input fields
-    usernameInput.value = '';
-    passwordInput.value = '';
 });
 
-// Auto-login if user is already logged in
-document.addEventListener('DOMContentLoaded', () => {
-    const currentUser = getCurrentUser();
-    if (currentUser) {
-        showMain(currentUser);
-    } else {
-        authContainer.classList.remove('hidden');
-    }
+// Navigation Buttons
+document.getElementById('play-slots').addEventListener('click', () => {
+    mainContainer.classList.add('hidden');
+    slotsContainer.classList.remove('hidden');
+});
+
+backButton.addEventListener('click', () => {
+    slotsContainer.classList.add('hidden');
+    mainContainer.classList.remove('hidden');
 });
