@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gambling Site</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Welcome to the Gambling Site</h1>
+        <div id="user-info">
+            <p id="welcome-message"></p>
+            <button id="logout-btn" class="hidden">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="login-register">
+            <h2>Login or Register</h2>
+            <form id="auth-form">
+                <input type="text" id="username" placeholder="Enter username" required>
+                <button type="submit">Login/Register</button>
+            </form>
+            <p id="auth-error" class="hidden">User not found.</p>
+        </section>
+
+        <section id="games" class="hidden">
+            <h2>Games</h2>
+            <div id="currency-container">
+                <p>Your Balance: <span id="balance">$0</span></p>
+                <button id="daily-reward-btn">Claim Daily Reward</button>
+            </div>
+            <div class="game" id="slots-game">
+                <h3>Slots</h3>
+                <button id="play-slots-btn">Play Slots ($100)</button>
+                <p id="slots-result"></p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Gambling Site. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
