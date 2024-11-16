@@ -1,85 +1,112 @@
-// User Information
-let username = "Guest";
-let balance = 1000;
-let hasClaimedReward = false;
+// Initialize variables
+const authContainer = document.getElementById('auth-container');
+const mainContainer = document.getElementById('main-container');
+const authForm = document.getElementById('auth-form');
+const usernameInput = document.getElementById('username');
+const passwordInput = document.getElementById('password');
+const authButton = document.getElementById('auth-button');
+const toggleAuth = document.getElementById('toggle-auth');
+const userDisplay = document.getElementById('user-display');
+const userBalance = document.getElementById('user-balance');
+const logoutButton = document.getElementById('logout-button');
 
-// Update balance and username display
-const updateDisplay = () => {
-    document.getElementById("username").textContent = `Player: ${username}`;
-    document.getElementById("balance").textContent = `Balance: $${balance}`;
-};
+// Helper: Get user data from localStorage
+function getUserData() {
+    return JSON.parse(localStorage.getItem('users')) || {};
+}
 
-// Claim daily reward
-document.getElementById("daily-reward").addEventListener("click", () => {
-    if (hasClaimedReward) {
-        alert("You have already claimed your daily reward!");
-    } else {
-        balance += 100;
-        hasClaimedReward = true;
-        alert("You claimed your daily reward of $100!");
-        updateDisplay();
-    }
+// Helper: Save user data to localStorage
+function saveUserData(data) {
+    localStorage.setItem('users', JSON.stringify(data));
+}
+
+// Helper: Set the current user
+function setCurrentUser(username) {
+    localStorage.setItem('currentUser', username);
+}
+
+// Helper: Get the current user
+function getCurrentUser() {
+    return localStorage.getItem('currentUser');
+}
+
+// Show main content
+function showMain(username) {
+    authContainer.classList.add('hidden');
+    mainContainer.classList.remove('hidden');
+    userDisplay.textContent = username;
+
+    // Fetch the user's balance
+    const users = getUserData();
+    userBalance.textContent = users[username].balance;
+}
+
+// Logout functionality
+logoutButton.addEventListener('click', () => {
+    localStorage.removeItem('currentUser');
+    mainContainer.classList.add('hidden');
+    authContainer.classList.remove('hidden');
 });
 
-// Play Slots
-document.getElementById("play-slots").addEventListener("click", () => {
-    if (balance < 10) {
-        alert("Not enough balance to play Slots!");
+// Login/Register Toggle
+let isLogin = true;
+toggleAuth.addEventListener('click', (e) => {
+    e.preventDefault();
+    isLogin = !isLogin;
+    authButton.textContent = isLogin ? 'Login' : 'Register';
+    toggleAuth.innerHTML = isLogin
+        ? "Don't have an account? <a href='#'>Register here</a>."
+        : "Already have an account? <a href='#'>Login here</a>.";
+});
+
+// Handle form submission (Login/Register)
+authForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!username || !password) {
+        alert('Please enter a valid username and password.');
         return;
     }
 
-    balance -= 10;
-    const outcome = Math.random();
-    if (outcome > 0.5) {
-        const winnings = 50;
-        balance += winnings;
-        alert(`You won $${winnings} playing Slots!`);
+    const users = getUserData();
+
+    if (isLogin) {
+        // Login logic
+        if (!users[username] || users[username].password !== password) {
+            alert('Invalid username or password.');
+            return;
+        }
+
+        // Login successful
+        setCurrentUser(username);
+        showMain(username);
     } else {
-        alert("You lost playing Slots!");
+        // Registration logic
+        if (users[username]) {
+            alert('Username already exists.');
+            return;
+        }
+
+        // Register the user
+        users[username] = { password, balance: 1000 }; // Default balance: $1000
+        saveUserData(users);
+        setCurrentUser(username);
+        showMain(username);
     }
 
-    updateDisplay();
+    // Clear input fields
+    usernameInput.value = '';
+    passwordInput.value = '';
 });
 
-// Play Blackjack
-document.getElementById("play-blackjack").addEventListener("click", () => {
-    if (balance < 20) {
-        alert("Not enough balance to play Blackjack!");
-        return;
-    }
-
-    balance -= 20;
-    const outcome = Math.random();
-    if (outcome > 0.5) {
-        const winnings = 40;
-        balance += winnings;
-        alert(`You won $${winnings} playing Blackjack!`);
+// Auto-login if user is already logged in
+document.addEventListener('DOMContentLoaded', () => {
+    const currentUser = getCurrentUser();
+    if (currentUser) {
+        showMain(currentUser);
     } else {
-        alert("You lost playing Blackjack!");
+        authContainer.classList.remove('hidden');
     }
-
-    updateDisplay();
 });
-
-// Play Roulette
-document.getElementById("play-roulette").addEventListener("click", () => {
-    if (balance < 15) {
-        alert("Not enough balance to play Roulette!");
-        return;
-    }
-
-    balance -= 15;
-    const outcome = Math.random();
-    if (outcome > 0.5) {
-        const winnings = 100;
-        balance += winnings;
-        alert(`You won $${winnings} playing Roulette!`);
-    } else {
-        alert("You lost playing Roulette!");
-    }
-
-    updateDisplay();
-});
-
-// Initialize the display
-updateDisplay();
